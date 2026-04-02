@@ -1,0 +1,42 @@
+# Seq2Seq with Attention baseline configuration for IWSLT en-de
+data:
+  src_lang: "en"
+  tgt_lang: "de"
+  year: "2017"
+  dataset_name: null
+  tokenizer_dir: "tokenizer"
+  vocab_size: 8000
+  model_type: "bpe"
+
+model:
+  type: "seq2seq_attention"
+  embed_dim: 256
+  hidden_dim: 512
+  attention_dim: 256
+  num_layers: 2
+  dropout: 0.3
+  teacher_forcing_ratio: 0.5
+
+training:
+  batch_size: 64
+  num_epochs: 50
+  learning_rate: 0.001
+  weight_decay: 0.0
+  clip_grad: 1.0
+  label_smoothing: 0.0
+  scheduler: "none"
+  warmup_steps: 0
+  num_workers: 4
+  seed: 42
+
+checkpoint:
+  save_dir: "checkpoints/seq2seq"
+  save_every: 5
+  best_metric: "bleu"
+
+logging:
+  log_dir: "logs/seq2seq"
+  log_every: 100
+
+decode:
+  max_len: 256

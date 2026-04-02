@@ -1,0 +1,44 @@
+# Transformer baseline configuration for IWSLT en-de
+data:
+  src_lang: "en"
+  tgt_lang: "de"
+  year: "2017"
+  dataset_name: null  # auto-resolved to iwslt{year}
+  tokenizer_dir: "tokenizer"
+  vocab_size: 8000
+  model_type: "bpe"
+
+model:
+  type: "transformer"
+  d_model: 512
+  nhead: 8
+  num_encoder_layers: 6
+  num_decoder_layers: 6
+  dim_feedforward: 2048
+  dropout: 0.1
+  max_len: 512
+
+training:
+  batch_size: 64
+  num_epochs: 50
+  learning_rate: 0.0001
+  weight_decay: 0.0001
+  clip_grad: 1.0
+  label_smoothing: 0.1
+  scheduler: "inverse_sqrt"
+  warmup_steps: 4000
+  num_workers: 4
+  seed: 42
+
+checkpoint:
+  save_dir: "checkpoints/transformer"
+  save_every: 5  # save every N epochs
+  best_metric: "bleu"  # metric to track for best model
+
+logging:
+  log_dir: "logs/transformer"
+  log_every: 100  # log every N batches
+
+decode:
+  max_len: 256
+  beam_size: 5  # for future beam search implementation
