@@ -23,7 +23,7 @@ def train_one_epoch(
     Args:
         model: The translation model.
         dataloader: Training DataLoader.
-        optimizer: Optimiser instance.
+        optimizer: Optimizer instance.
         criterion: Loss function (e.g., CrossEntropyLoss).
         device: Torch device.
         clip_grad: Maximum gradient norm for clipping.
@@ -46,19 +46,14 @@ def train_one_epoch(
         output = model(src, tgt)
 
         # Reshape for loss computation
+        tgt_out = tgt[:, 1:]
         if output.dim() == 3:
-            # (batch, seq_len, vocab) -> (batch * seq_len, vocab)
-            # Target: tgt[:, 1:] for both model types
-            tgt_out = tgt[:, 1:]
+            # Transformer outputs same length as tgt input; trim last step
             if output.size(1) == tgt.size(1):
-                # Transformer outputs same length as tgt input
-                tgt_out = tgt[:, 1:]
                 output = output[:, :-1]
-
             output = output.contiguous().view(-1, output.size(-1))
-            tgt_out = tgt_out.contiguous().view(-1)
-        else:
-            tgt_out = tgt[:, 1:].contiguous().view(-1)
+
+        tgt_out = tgt_out.contiguous().view(-1)
 
         loss = criterion(output, tgt_out)
         loss.backward()
@@ -102,14 +97,13 @@ def evaluate(
 
         output = model(src, tgt)
 
+        tgt_out = tgt[:, 1:]
         if output.dim() == 3:
-            tgt_out = tgt[:, 1:]
             if output.size(1) == tgt.size(1):
                 output = output[:, :-1]
             output = output.contiguous().view(-1, output.size(-1))
-            tgt_out = tgt_out.contiguous().view(-1)
-        else:
-            tgt_out = tgt[:, 1:].contiguous().view(-1)
+
+        tgt_out = tgt_out.contiguous().view(-1)
 
         loss = criterion(output, tgt_out)
         total_loss += loss.item()

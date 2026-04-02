@@ -48,10 +48,9 @@ class Encoder(nn.Module):
         embedded = self.dropout(self.embedding(src))
         outputs, hidden = self.rnn(embedded)
         # hidden: (num_layers * 2, batch, hidden_dim) -> merge directions
-        # Take the last layer's forward and backward hidden states
-        num_layers = hidden.size(0) // 2
-        hidden_fwd = hidden[2 * torch.arange(num_layers)]  # (num_layers, batch, hidden_dim)
-        hidden_bwd = hidden[2 * torch.arange(num_layers) + 1]
+        # Interleaved as [fwd_layer0, bwd_layer0, fwd_layer1, bwd_layer1, ...]
+        hidden_fwd = hidden[0::2]  # (num_layers, batch, hidden_dim)
+        hidden_bwd = hidden[1::2]
         hidden = torch.tanh(
             self.fc_hidden(torch.cat([hidden_fwd, hidden_bwd], dim=-1))
         )

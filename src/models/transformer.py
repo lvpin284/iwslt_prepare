@@ -96,7 +96,7 @@ class TransformerModel(nn.Module):
         self._init_parameters()
 
     def _init_parameters(self) -> None:
-        """Xavier uniform initialisation for all parameters."""
+        """Xavier uniform initialization for all parameters."""
         for p in self.parameters():
             if p.dim() > 1:
                 nn.init.xavier_uniform_(p)
