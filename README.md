@@ -1,6 +1,6 @@
 # IWSLT Prepare
 
-Baseline models for the [IWSLT](https://iwslt.org/) (International Workshop on Spoken Language Translation) competition, developed with XiaoYi Group.
+Baseline models for the [IWSLT](https://iwslt.org/) (International Workshop on Spoken Language Translation) competition
 
 ## Project Structure
 
